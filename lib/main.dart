@@ -1,193 +1,271 @@
 import 'package:flutter/material.dart';
-
+import 'package:device_preview/device_preview.dart';
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(builder: (context) => MyApp(),));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'cart app',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class ClothingItem {
+  final String name;
+  final String imageUrl;
+  final String color;
+  final String size;
+  final double price;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ClothingItem({
+    required this.name,
+    required this.imageUrl,
+    required this.color,
+    required this.size,
+    required this.price,
+  });
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List<int> store = [];
-  int count = 1;
-  // int price = 30;
-  // int result = 0;
-  // void resultCount(int c) {
-  //   result = (c + 1) * 30;
-  //   store.add(result);
-  // }
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePage createState() => _MyHomePage();
+}
 
-  int showCount() {
-    int totalCount = 0;
-    store.forEach((element) {
-      totalCount += element;
+class _MyHomePage extends State<MyHomePage> {
+  List<int> itemCounts = List<int>.generate(3, (index) => 0);
+  List<double> unitPrices = [51.0, 30.0, 43.0];
+  double totalAmount = 0.0;
+
+  void updateTotalAmount() {
+    setState(() {
+      totalAmount = itemCounts.fold(0.0, (prev, count) =>
+      prev + (unitPrices[itemCounts.indexOf(count)] * count));
     });
-    return totalCount;
   }
 
-  void decrease() {
-    for (int i = 0; i < store.length; i++) {
-      i--;
-    }
-    print(store);
+  void showCongratulatorySnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Congratulations! '),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(""),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+
+    final List<ClothingItem> items = [
+      ClothingItem(
+        name: 'Pullover',
+        imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+
+        color: 'Black',
+        size: 'L',
+        price: 51.0,
       ),
+      ClothingItem(
+        name: 'T-Shirt',
+        imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        color: 'Gray',
+        size: 'L',
+        price: 30.0,
+      ),
+      ClothingItem(
+        name: 'Sport Dress',
+        imageUrl:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        color: 'Black',
+        size: 'M',
+        price: 43.0,
+      ),
+    ];
+
+    return Scaffold(
       body: Center(
-        child: ListView(shrinkWrap: true, children: [
-          Center(
-            child: Column(
-              children: [
-                Text(
-                  "My Bag",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                ListTile(
-                  leading: Container(
-                    height: 100,
-                    width: 30,
-                    child: Image.network(
-                        "https://cdn.ostad.app/user/avatar/2023-07-21T07-23-55.519Z-581503.jpg"),
-                  ),
-                  title: Text('Pullover'),
-                  trailing: Text("30"),
-                  subtitle: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 6,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Text("Color:Black"),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text("Size: L")
-                        ],
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Icon(Icons.search),
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Card(
-                            elevation: 10,
-                            shape: CircleBorder(),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    count++;
-                                    // resultCount(count++);
-                                    store.add(30);
-                                    showCount();
-                                    print(store);
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  shape: CircleBorder(),
-                                ),
-                                child: Text('+',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ))),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'My Bag',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
                           ),
-                          SizedBox(
-                            width: 10,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      for (int index = 0; index < itemCounts.length; index++)
+                        Card(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.green,
+                                    width: double.infinity,
+                                    height: 150,
+                                    child: Image.network(
+                                      items[index].imageUrl,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 150,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            title: Text(items[index].name, style: TextStyle(fontSize:22,fontWeight: FontWeight.bold),),
+                                            trailing: Icon(Icons.more_vert),
+                                          ),
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                'Color: ${items[index].color}   Size: ${items[index].size}',
+                                                style: TextStyle(fontWeight:FontWeight.bold),)),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.all(8.0),
+                                                child: Card(
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      if (itemCounts[index] >
+                                                          0) {
+                                                        setState(() {
+                                                          itemCounts[index]--;
+                                                          updateTotalAmount();
+                                                        });
+                                                      }
+                                                    },
+                                                    icon: Icon(Icons.remove),
+                                                  ),
+                                                  elevation: 10,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                                ),
+                                              ),
+                                              Text('${itemCounts[index]}'),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.all(8.0),
+                                                child: Card(
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        itemCounts[index]++;
+                                                        updateTotalAmount();
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add),
+                                                  ),
+                                                  elevation: 10,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 20),
+                                                child:
+                                                Text("${items[index].price}\$"),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                            ],
                           ),
-                          Text(
-                            "${count}",
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Card(
-                            elevation: 10,
-                            color: Colors.white,
-                            shape: CircleBorder(),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    count--;
-                                    decrease();
-                                    showCount();
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  shape: CircleBorder(),
-                                ),
-                                child: Text('-',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ))),
-                          )
-                        ],
-                      )
+                        ),
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Text("Total Ammount"),
-                    SizedBox(
-                      width: 320,
-                    ),
-                    Text("${showCount()}")
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 400,
-                  height: 40,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Congratulations')));
-                    },
-                    child: Text('Checkout'),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 0, 64),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                        )),
-                  ),
-                )
-              ],
-            ),
-          )
-        ]),
-      ),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Total amount: ',style:
+                                TextStyle(fontWeight:FontWeight.bold),),
 
-      // This trailing comma makes auto-formatting nicer for build methods.
+                                Text('${totalAmount.toStringAsFixed(2)}\$',
+                                  style: TextStyle(fontWeight:FontWeight.bold),)
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(150)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            onPressed: () {
+                              showCongratulatorySnackbar();
+                            },
+                            child: Center(child: Text('CHECK OUT')),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
