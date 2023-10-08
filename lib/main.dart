@@ -62,7 +62,7 @@ class _MyHomePage extends State<MyHomePage> {
       ClothingItem(
         name: 'Pullover',
         imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        'https://cdn.ostad.app/user/avatar/2023-07-21T07-23-55.519Z-581503.jpg',
 
         color: 'Black',
         size: 'L',
@@ -71,7 +71,7 @@ class _MyHomePage extends State<MyHomePage> {
       ClothingItem(
         name: 'T-Shirt',
         imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        'https://cdn.ostad.app/user/avatar/2023-07-21T07-23-55.519Z-581503.jpg',
         color: 'Gray',
         size: 'L',
         price: 30.0,
@@ -79,7 +79,7 @@ class _MyHomePage extends State<MyHomePage> {
       ClothingItem(
         name: 'Sport Dress',
         imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bill_Gates_2017_%28cropped%29.jpg/330px-Bill_Gates_2017_%28cropped%29.jpg',
+        'https://cdn.ostad.app/user/avatar/2023-07-21T07-23-55.519Z-581503.jpg',
         color: 'Black',
         size: 'M',
         price: 43.0,
